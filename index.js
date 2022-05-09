@@ -1,10 +1,12 @@
+require('dotenv').config();
 const { Telegraf, Markup  } = require('telegraf');
 const express = require('express')
 const expressApp = express()
-const { botonTexto1, botonTexto2, urlPantalla1, urlPantalla2, urlPantalla3, TextoPantalla1, TextoPantalla2, TextoPantalla3, textoRedes, textoGuia, textoBienvenida, botonPantalla1, botonPantalla2, urlDocument } = require('./cambios');
-require('dotenv').config();
-
+const { textoRedes, textoGuia, textoBienvenida, botonPantalla1, botonPantalla2, urlDocument } = require('./cambios');
+const { rss, trigger } = require('./helper');
 const port = process.env.PORT || 3000
+
+
 expressApp.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -14,44 +16,6 @@ expressApp.listen(port, () => {
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-const trigger = {
-    reply_markup: {
-        inline_keyboard: [
-            [
-                {
-                    text: botonTexto1,
-                    callback_data: 'redes'
-                }
-            ],
-            [
-                {
-                    text: botonTexto2,
-                    callback_data: 'guia'
-                }
-            ]
-        ]
-    }
-} 
-const rss = {
-    reply_markup: {
-        inline_keyboard: [
-            [
-                {
-                    text: TextoPantalla1,
-                    url: urlPantalla1
-                },
-                {
-                    text: TextoPantalla2,
-                    url: urlPantalla2
-                },
-                {
-                    text: TextoPantalla3,
-                    url: urlPantalla3
-                },
-            ]
-        ]
-    }
-} 
 bot.action('guia', (ctx) => {
 
     ctx.reply(`${textoGuia} 
@@ -73,13 +37,10 @@ ${urlDocument}`)
 })
 
 bot.command('bienvenida', (ctx) => {
-
-
     ctx.replyWithMarkdown(textoBienvenida, Markup.keyboard([
         [botonPantalla1],
         [botonPantalla2],
     ]))
-
 })
     
 bot.hears('📱  Redes sociales', (ctx) => {
