@@ -1,8 +1,18 @@
 const { Telegraf, Markup  } = require('telegraf');
+const express = require('express')
+const expressApp = express()
 const { botonTexto1, botonTexto2, urlPantalla1, urlPantalla2, urlPantalla3, TextoPantalla1, TextoPantalla2, TextoPantalla3, textoRedes, textoGuia, textoBienvenida, botonPantalla1, botonPantalla2, urlDocument } = require('./cambios');
 require('dotenv').config();
 
-const bot = new Telegraf(process.env.BOT_API);
+const port = process.env.PORT || 3000
+expressApp.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+expressApp.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+})
+
+const bot = new Telegraf(process.env.BOT_TOKEN)
 
 const trigger = {
     reply_markup: {
@@ -101,6 +111,5 @@ bot.use(async (ctx) => {
 
     }
 })
-
-
-bot.launch();
+bot.hears(/./, (ctx) => ctx.reply('Hello'))
+bot.startPolling()
